@@ -1,5 +1,4 @@
--- Скрипт загрузки данных
--- Автор: Кузнецова Полина
+
 
 TRUNCATE TABLE transactions, customers, products, locations CASCADE;
 
