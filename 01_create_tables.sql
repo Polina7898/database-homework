@@ -1,16 +1,15 @@
--- ====================================================================
--- Скрипт создания таблиц для нормализованной БД
--- Автор: Кузнецова Полина
--- ====================================================================
 
--- Удаляю таблицы если они уже существуют
+-- Скрипт создания таблиц для нормализованной БД
+
+
+
 DROP TABLE IF EXISTS transactions CASCADE;
 DROP TABLE IF EXISTS customers CASCADE;
 DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS locations CASCADE;
 
 -- ====================================================================
--- Таблица locations - справочник местоположений
+-- Таблица locations 
 -- ====================================================================
 CREATE TABLE locations (
     location_id INTEGER PRIMARY KEY,
@@ -20,7 +19,7 @@ CREATE TABLE locations (
 );
 
 -- ====================================================================
--- Таблица products - справочник товаров
+-- Таблица products 
 -- ====================================================================
 CREATE TABLE products (
     product_id INTEGER PRIMARY KEY,
@@ -33,7 +32,7 @@ CREATE TABLE products (
 );
 
 -- ====================================================================
--- Таблица customers - данные о клиентах
+-- Таблица customers 
 -- ====================================================================
 CREATE TABLE customers (
     customer_id INTEGER PRIMARY KEY,
@@ -53,7 +52,7 @@ CREATE TABLE customers (
 );
 
 -- ====================================================================
--- Таблица transactions - данные о транзакциях
+-- Таблица transactions 
 -- ====================================================================
 CREATE TABLE transactions (
     transaction_id INTEGER PRIMARY KEY,
@@ -66,9 +65,6 @@ CREATE TABLE transactions (
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
 );
 
--- ====================================================================
--- Создаю индексы для ускорения запросов
--- ====================================================================
 CREATE INDEX idx_customer_date ON transactions(customer_id, transaction_date);
 CREATE INDEX idx_product ON transactions(product_id);
 CREATE INDEX idx_date ON transactions(transaction_date);
