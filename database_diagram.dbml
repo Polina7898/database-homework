@@ -1,5 +1,5 @@
 // DBML-схема для домашнего задания
-// Автор: Кузнецова Полина
+
 
 Table customers {
   customer_id integer [primary key, note: 'Уникальный идентификатор клиента']
