@@ -1,0 +1,62 @@
+// DBML-схема для домашнего задания
+// Автор: Кузнецова Полина
+
+Table customers {
+  customer_id integer [primary key, note: 'Уникальный идентификатор клиента']
+  first_name varchar(100) [not null, note: 'Имя клиента']
+  last_name varchar(100) [null, note: 'Фамилия клиента']
+  gender varchar(10) [not null, note: 'Пол клиента']
+  date_of_birth date [null, note: 'Дата рождения']
+  job_title varchar(100) [null, note: 'Должность']
+  job_industry_category varchar(100) [null, note: 'Категория индустрии']
+  wealth_segment varchar(50) [not null, note: 'Сегмент благосостояния']
+  deceased_indicator char(1) [not null, note: 'Индикатор смерти (Y/N)']
+  owns_car varchar(3) [not null, note: 'Владеет автомобилем (Yes/No)']
+  address varchar(255) [not null, note: 'Адрес']
+  location_id integer [not null, ref: > locations.location_id, note: 'Ссылка на локацию']
+  property_valuation integer [not null, note: 'Оценка собственности']
+  
+  Note: 'Справочник клиентов с персональной информацией'
+}
+
+Table locations {
+  location_id integer [primary key, note: 'Уникальный идентификатор локации']
+  postcode integer [not null, note: 'Почтовый индекс']
+  state varchar(50) [not null, note: 'Штат/регион']
+  country varchar(50) [not null, note: 'Страна']
+  
+  indexes {
+    postcode [unique]
+  }
+  
+  Note: 'Справочник локаций (устраняет транзитивную зависимость postcode → state, country)'
+}
+
+Table products {
+  product_id integer [primary key, note: 'Уникальный идентификатор продукта']
+  brand varchar(100) [null, note: 'Бренд продукта']
+  product_line varchar(50) [null, note: 'Линейка продукта (Standard, Road, Mountain, Touring)']
+  product_class varchar(20) [null, note: 'Класс продукта (low, medium, high)']
+  product_size varchar(20) [null, note: 'Размер продукта (small, medium, large)']
+  list_price decimal(10,2) [not null, note: 'Цена по прайс-листу']
+  standard_cost decimal(10,2) [null, note: 'Стандартная стоимость']
+  
+  Note: 'Справочник продуктов (устраняет дублирование данных о продуктах в транзакциях)'
+}
+
+Table transactions {
+  transaction_id integer [primary key, note: 'Уникальный идентификатор транзакции']
+  product_id integer [not null, ref: > products.product_id, note: 'Ссылка на продукт']
+  customer_id integer [not null, ref: > customers.customer_id, note: 'Ссылка на клиента']
+  transaction_date date [not null, note: 'Дата транзакции']
+  online_order boolean [null, note: 'Онлайн заказ (True/False)']
+  order_status varchar(20) [not null, note: 'Статус заказа (Approved, Cancelled)']
+  
+  indexes {
+    (customer_id, transaction_date) [name: 'idx_customer_date']
+    product_id [name: 'idx_product']
+    transaction_date [name: 'idx_date']
+  }
+  
+  Note: 'Таблица транзакций (содержит только транзакционные данные и ссылки на справочники)'
+}
